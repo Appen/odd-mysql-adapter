@@ -1,0 +1,38 @@
+name: build
+on: 
+  workflow_dispatch:
+    inputs:
+      imageTag:
+        description: Tag for the image
+        required: false
+        default: latest
+  push:
+    branches:
+      - "master"
+
+jobs:
+  images:
+    runs-on: self-hosted
+    env:
+      REGISTRY: 436866023604.dkr.ecr.eu-central-1.amazonaws.com
+      TAG: latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - uses: unfor19/install-aws-cli-action@v1
+      - name: Check image tag
+        if: github.event.inputs.imageTag != ''
+        run: echo "TAG=${{ github.event.inputs.imageTag }}" >> $GITHUB_ENV
+      - name: Build Docker image
+        run: |
+          aws ecr get-login-password | docker login --username AWS --password-stdin ${{ env.REGISTRY }}
+          docker build -t ${{ env.REGISTRY }}/${{ github.event.repository.name }}:${{ env.TAG }} .
+          docker push ${{ env.REGISTRY }}/${{ github.event.repository.name }}:${{ env.TAG }}
+  restart:
+    needs: ["images"]
+    runs-on: self-hosted
+    steps:
+      - uses: azure/setup-kubectl@v1
+      - run: |
+          kubectl -n demo rollout restart deployment ${{ github.event.repository.name }} ||:
