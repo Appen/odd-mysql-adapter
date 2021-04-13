@@ -11,7 +11,8 @@ _data_set_metadata_schema_url: str = _METADATA_SCHEMA_URL_PREFIX + 'DataSetExten
 _data_set_field_metadata_schema_url: str = _METADATA_SCHEMA_URL_PREFIX + 'DataSetFieldExtension'
 
 _data_set_metadata_excluded_keys: set = \
-    {'table_catalog', 'table_schema', 'table_name', 'table_type', 'table_rows', 'create_time', 'table_comment'}
+    {'table_catalog', 'table_schema', 'table_name', 'table_type',
+     'table_rows', 'create_time', 'update_time', 'table_comment', 'view_definition'}
 
 _data_set_field_metadata_excluded_keys: set = \
     {'table_catalog', 'table_schema', 'table_name', 'column_name',
