@@ -51,3 +51,9 @@ TYPES_SQL_TO_ODD = {
     "enum": "TYPE_UNION",
     "set": "TYPE_LIST"
 }
+
+# base tables and views
+TABLE_TYPES_SQL_TO_ODD = {
+    'BASE TABLE': 'DATASET_TABLE',
+    'VIEW': 'DATASET_VIEW'
+}

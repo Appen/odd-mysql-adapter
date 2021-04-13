@@ -3,17 +3,17 @@ version: "3.8"
 services:
 
   db-mysql:
-    image: mysql:latest
+    image: mysql:5.7
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD: y
-      #- MYSQL_ROOT_PASSWORD: odd-adapter-password
-      - MYSQL_DATABASE: oddadapter
-      - MYSQL_USER: oddadapter
-      - MYSQL_PASSWORD: odd-adapter-password
+      - MYSQL_RANDOM_ROOT_PASSWORD=y
+      #- MYSQL_ROOT_PASSWORD=odd-adapter-password
+      - MYSQL_DATABASE=oddadapter
+      - MYSQL_USER=oddadapter
+      - MYSQL_PASSWORD=odd-adapter-password
     ports:
-      - 3306:3306
+      - "127.0.0.1:3306:3306"
     volumes:
       - mysql:/var/lib/mysql
       - mysql_config:/etc/mysql
@@ -23,13 +23,13 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD: y
-      #- MYSQL_ROOT_PASSWORD: odd-adapter-password
-      - MYSQL_DATABASE: oddadapter
-      - MYSQL_USER: oddadapter
-      - MYSQL_PASSWORD: odd-adapter-password
+      - MYSQL_RANDOM_ROOT_PASSWORD=y
+      #- MYSQL_ROOT_PASSWORD=odd-adapter-password
+      - MYSQL_DATABASE=oddadapter
+      - MYSQL_USER=oddadapter
+      - MYSQL_PASSWORD=odd-adapter-password
     ports:
-      - 3307:3306
+      - "127.0.0.1:3307:3306"
     volumes:
       - mariadb:/var/lib/mysql
       - mariadb_config:/etc/mysql
@@ -54,7 +54,7 @@ services:
     depends_on:
       - db-mysql
     ports:
-      - 8080:8080
+      - "127.0.0.1:8080:8080"
 
   adapter-mariadb:
     build:
@@ -76,7 +76,7 @@ services:
     depends_on:
       - db-mariadb
     ports:
-      - 8081:8080
+      - "127.0.0.1:8081:8080"
 
 volumes:
   mysql:

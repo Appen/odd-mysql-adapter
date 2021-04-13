@@ -2,32 +2,30 @@ import logging
 import mysql.connector
 from mysql.connector import errorcode
 from odd_contract.models import DataEntity
-from adapter import _adapter_prefix
-from adapter import _table_metadata, _table_table, _table_order_by
+from adapter import _ADAPTER_PREFIX, _DEFAULT_CLOUD_PREFIX, _table_select
 from adapter import _column_metadata, _column_table, _column_order_by
 from adapter.table import _map_table
 from app.abstract_adapter import AbstractAdapter
-from config import get_env
 
 
-def create_adapter() -> AbstractAdapter:
-    return MysqlAdapter()
+def create_adapter(data_source_name: str, data_source: str, config: dict) -> AbstractAdapter:
+    return MysqlAdapter(data_source_name, data_source, config)
 
 
 class MysqlAdapter(AbstractAdapter):
-    __cloud_prefix = ""
+    __cloud_prefix: str = _DEFAULT_CLOUD_PREFIX
     __connection = None
     __cursor = None
 
     # replace
-    def __init__(self) -> None:
-        self.__host = get_env("MYSQLHOST", "localhost")
-        self.__port = get_env("MYSQLPORT", "3306")
-        self.__database = get_env("MYSQLDATABASE", "")
-        self.__user = get_env("MYSQLUSER", "")
-        self.__password = get_env("MYSQLPASSWORD", "")
-        self.__data_source_oddrn = f"//{self.__cloud_prefix}{_adapter_prefix}{self.__host}"
-        super().__init__()
+    def __init__(self, data_source_name: str, data_source: str, config: dict) -> None:
+        super().__init__(data_source_name, data_source, config)
+        self.__host = config['ODD_HOST']
+        self.__port = config['ODD_PORT']
+        self.__database = config['ODD_DATABASE']
+        self.__user = config['ODD_USER']
+        self.__password = config['ODD_PASSWORD']
+        self.__data_source_oddrn = f'//{self.__cloud_prefix}{_ADAPTER_PREFIX}{self._data_source_name}'
 
     def get_data_source_oddrn(self) -> str:
         return self.__data_source_oddrn
@@ -36,19 +34,25 @@ class MysqlAdapter(AbstractAdapter):
         try:
             self.__connect()
 
-            tables = self.__query(_table_metadata, _table_table, _table_order_by)
+            tables = self.__execute(_table_select)
             columns = self.__query(_column_metadata, _column_table, _column_order_by)
 
             return _map_table(self.get_data_source_oddrn(), tables, columns)
         except Exception:
-            logging.error("Failed to load metadata for tables")
+            logging.error('Failed to load metadata for tables')
             logging.exception(Exception)
         finally:
             self.__disconnect()
         return []
 
+    def get_data_transformers(self) -> list[DataEntity]:
+        return []
+
+    def get_data_transformer_runs(self) -> list[DataEntity]:
+        return []
+
     def __query(self, columns: str, table: str, order_by: str) -> list[tuple]:
-        return self.__execute(f"select {columns} from {table} order by {order_by}")
+        return self.__execute(f'select {columns} from {table} order by {order_by}')
 
     def __execute(self, query: str) -> list[tuple]:
         self.__cursor.execute(query)
@@ -65,12 +69,12 @@ class MysqlAdapter(AbstractAdapter):
 
         except mysql.connector.Error as err:
             if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-                logging.error("Something is wrong with your user name or password")
+                logging.error('Something is wrong with your user name or password')
             elif err.errno == errorcode.ER_BAD_DB_ERROR:
-                logging.error("Database does not exist")
+                logging.error('Database does not exist')
             else:
                 logging.error(err)
-            raise DBException("Database error")
+            raise DBException('Database error')
         return
 
     # replace
