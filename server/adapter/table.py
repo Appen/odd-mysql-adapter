@@ -35,8 +35,13 @@ def _map_table(data_source_oddrn: str, tables: list[tuple], columns: list[tuple]
             _append_metadata_extension(data_entity.metadata, _data_set_metadata_schema_url, metadata,
                                        _data_set_metadata_excluded_keys)
 
-        data_entity.created_at = metadata.create_time
-        data_entity.updated_at = metadata.update_time if metadata.update_time is not None else metadata.create_time
+        if metadata.create_time is not None:
+            data_entity.created_at = metadata.create_time.isoformat()
+        if metadata.update_time is not None:
+            data_entity.updated_at = metadata.update_time.isoformat()
+        else:
+            if metadata.create_time is not None:
+                data_entity.updated_at = data_entity.created_at
 
         data_entity.dataset = DataSet()
 

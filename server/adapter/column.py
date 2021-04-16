@@ -29,7 +29,7 @@ def _map_column(column_metadata: ColumnMetadataNamedtuple,
     dsf.type = DataSetFieldType()
     data_type: str = _convert_bytes_to_str(column_metadata.data_type)
     dsf.type.type = TYPES_SQL_TO_ODD[data_type] if data_type in TYPES_SQL_TO_ODD else 'TYPE_UNKNOWN'
-    dsf.type.logical_type = _convert_bytes_to_str(column_metadata.column_type)
+    dsf.type.logical_type = _convert_bytes_to_str(column_metadata.data_type)
     dsf.type.is_nullable = True if column_metadata.is_nullable == 'YES' else False
 
     # dsf.is_key = bool(is_key)
