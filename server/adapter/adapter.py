@@ -25,6 +25,7 @@ class MysqlAdapter(AbstractAdapter):
         self.__database = config['ODD_DATABASE']
         self.__user = config['ODD_USER']
         self.__password = config['ODD_PASSWORD']
+        self.__ssl_disabled = config.get('ODD_SSL_DISABLED', True)
         self.__data_source_oddrn = f'//{self.__cloud_prefix}{_ADAPTER_PREFIX}{self._data_source_name}'
 
     def get_data_source_oddrn(self) -> str:
@@ -64,7 +65,7 @@ class MysqlAdapter(AbstractAdapter):
         try:
             self.__connection = mysql.connector.connect(
                 host=self.__host, port=self.__port, database=self.__database,
-                user=self.__user, password=self.__password)
+                user=self.__user, password=self.__password, ssl_disabled=self.__ssl_disabled)
             self.__cursor = self.__connection.cursor()
 
         except mysql.connector.Error as err:

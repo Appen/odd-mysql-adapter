@@ -1,6 +1,7 @@
 import os
 import logging
 from flask import Response
+from flask_compress import Compress
 from odd_contract import init_flask_app, init_controller
 from adapter.adapter import create_adapter
 from app.cache import Cache
@@ -21,6 +22,8 @@ def create_app(conf):
     log_env_vars(app.config)
 
     app.add_url_rule('/health', 'healthcheck', lambda: Response(status=200))
+
+    Compress().init_app(app)
 
     cache = Cache()
     adapter = create_adapter(app.config['ODD_DATA_SOURCE_NAME'], app.config['ODD_DATA_SOURCE'], app.config)

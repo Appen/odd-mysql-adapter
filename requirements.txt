@@ -2,5 +2,6 @@
 odd-contract-dev==0.0.29
 gunicorn==20.0.4
 flask==1.1.2
+flask-compress==1.9.0
 apscheduler==3.7.0
 mysql-connector-python==8.0.23
