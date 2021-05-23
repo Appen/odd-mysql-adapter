@@ -54,6 +54,6 @@ TYPES_SQL_TO_ODD = {
 
 # base tables and views
 TABLE_TYPES_SQL_TO_ODD = {
-    'BASE TABLE': 'DATASET_TABLE',
-    'VIEW': 'DATASET_VIEW'
+    'BASE TABLE': 'TABLE',
+    'VIEW': 'VIEW'
 }

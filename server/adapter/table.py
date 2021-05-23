@@ -28,8 +28,12 @@ def _map_table(data_source_oddrn: str, tables: list[tuple], columns: list[tuple]
         data_entity.oddrn = table_oddrn
         data_entity.name = table_name
         data_entity.owner = metadata.table_schema
+        data_entity.description = metadata.table_comment
 
-        if metadata.table_type == 'BASE TABLE':  # data_entity.dataset.subtype == 'DATASET_TABLE'
+        data_entity.type = TABLE_TYPES_SQL_TO_ODD[metadata.table_type] \
+            if metadata.table_type in TABLE_TYPES_SQL_TO_ODD else 'UNKNOWN'
+
+        if metadata.table_type == 'BASE TABLE':
             data_entity.metadata = []
             # it is for full tables only
             _append_metadata_extension(data_entity.metadata, _data_set_metadata_schema_url, metadata,
@@ -46,29 +50,18 @@ def _map_table(data_source_oddrn: str, tables: list[tuple], columns: list[tuple]
         data_entity.dataset = DataSet()
 
         data_entity.dataset.parent_oddrn = schema_oddrn
-        if not (metadata.table_comment == '' or (metadata.table_type == 'VIEW' and metadata.table_comment == 'VIEW')):
-            data_entity.dataset.description = metadata.table_comment
-
         data_entity.dataset.rows_number = metadata.table_rows
-
-        data_entity.dataset.subtype = TABLE_TYPES_SQL_TO_ODD[metadata.table_type] \
-            if metadata.table_type in TABLE_TYPES_SQL_TO_ODD else 'DATASET_TABLE'  # DATASET_UNKNOWN
-
         data_entity.dataset.field_list = []
 
         # DataTransformer
-        if metadata.table_type == 'VIEW':  # data_entity.dataset.subtype == 'DATASET_VIEW'
+        if metadata.table_type == 'VIEW':
             data_entity.data_transformer = DataTransformer()
 
-            if not (metadata.table_comment == '' or metadata.table_comment == 'VIEW'):
-                data_entity.data_transformer.description = metadata.table_comment
             # data_entity.data_transformer.source_code_url = None
             data_entity.data_transformer.sql = metadata.view_definition
 
             data_entity.data_transformer.inputs = []
             data_entity.data_transformer.outputs = []
-
-            data_entity.data_transformer.subtype = 'DATATRANSFORMER_VIEW'
 
         # DatasetField
         while column_index < len(columns):
