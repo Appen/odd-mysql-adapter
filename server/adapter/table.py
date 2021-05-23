@@ -47,6 +47,7 @@ def _map_table(data_source_oddrn: str, tables: list[tuple], columns: list[tuple]
             if metadata.create_time is not None:
                 data_entity.updated_at = data_entity.created_at
 
+        # Dataset
         data_entity.dataset = DataSet()
 
         data_entity.dataset.parent_oddrn = schema_oddrn

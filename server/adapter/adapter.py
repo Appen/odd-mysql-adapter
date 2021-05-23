@@ -25,7 +25,7 @@ class MysqlAdapter(AbstractAdapter):
         self.__database = config['ODD_DATABASE']
         self.__user = config['ODD_USER']
         self.__password = config['ODD_PASSWORD']
-        self.__ssl_disabled = config.get('ODD_SSL_DISABLED', True)
+        self.__ssl_disabled = config['ODD_SSL_DISABLED']
         self.__data_source_oddrn = f'//{self.__cloud_prefix}{_ADAPTER_PREFIX}{self._data_source_name}'
 
     def get_data_source_oddrn(self) -> str:
@@ -38,11 +38,13 @@ class MysqlAdapter(AbstractAdapter):
             tables = self.__execute(_table_select)
             columns = self.__query(_column_metadata, _column_table, _column_order_by)
 
+            self.__disconnect()
+            logging.info(f'Load {len(tables)} Datasets DataEntities from database')
+
             return _map_table(self.get_data_source_oddrn(), tables, columns)
         except Exception:
             logging.error('Failed to load metadata for tables')
             logging.exception(Exception)
-        finally:
             self.__disconnect()
         return []
 

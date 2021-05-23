@@ -23,7 +23,7 @@ class BaseConfig:
     ODD_DATABASE = get_env('MYSQLDATABASE', '')
     ODD_USER = get_env('MYSQLUSER', '')
     ODD_PASSWORD = get_env('MYSQLPASSWORD', '')
-    ODD_SSL_DISABLED = bool(get_env('MYSQLSSLDISABLED', True))
+    ODD_SSL_DISABLED = bool(get_env('MYSQLSSLDISABLED', False))
 
     ODD_DATA_SOURCE_NAME = get_env('ODD_DATA_SOURCE_NAME', get_env('MYSQLHOST', 'localhost'))
     ODD_DATA_SOURCE = get_env('ODD_DATA_SOURCE', 'mysql://')
