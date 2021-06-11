@@ -6,6 +6,8 @@ from adapter.metadata import _append_metadata_extension
 from adapter.type import TABLE_TYPES_SQL_TO_ODD
 from app.oddrn import generate_table_oddrn, generate_schema_oddrn
 
+import pytz
+
 
 def _map_table(data_source_oddrn: str, tables: list[tuple], columns: list[tuple]) -> list[DataEntity]:
     data_entities: list[DataEntity] = []
@@ -40,12 +42,9 @@ def _map_table(data_source_oddrn: str, tables: list[tuple], columns: list[tuple]
                                        _data_set_metadata_excluded_keys)
 
         if metadata.create_time is not None:
-            data_entity.created_at = metadata.create_time.isoformat()
+            data_entity.created_at = metadata.create_time.replace(tzinfo=pytz.utc).isoformat()
         if metadata.update_time is not None:
-            data_entity.updated_at = metadata.update_time.isoformat()
-        else:
-            if metadata.create_time is not None:
-                data_entity.updated_at = data_entity.created_at
+            data_entity.updated_at = metadata.update_time.replace(tzinfo=pytz.utc).isoformat()
 
         # Dataset
         data_entity.dataset = DataSet()
