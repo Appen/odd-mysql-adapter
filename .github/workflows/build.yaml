@@ -1,11 +1,11 @@
 name: build
 on: 
-  workflow_dispatch:
-    inputs:
-      imageTag:
-        description: Tag for the image
-        required: false
-        default: latest
+#   workflow_dispatch:
+#     inputs:
+#       imageTag:
+#         description: Tag for the image
+#         required: false
+#         default: latest
   push:
     branches:
       - "master"
@@ -15,22 +15,42 @@ jobs:
     runs-on: self-hosted
     env:
       REGISTRY: 436866023604.dkr.ecr.eu-central-1.amazonaws.com
-      TAG: latest
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 1
       - uses: unfor19/install-aws-cli-action@v1
-      - name: Check image tag
-        if: github.event.inputs.imageTag != ''
-        run: echo "TAG=${{ github.event.inputs.imageTag }}" >> $GITHUB_ENV
-      - name: Build Docker image
+      # - name: Check image tag
+      #   if: github.event.inputs.imageTag != ''
+      #   run: echo "TAG=${{ github.event.inputs.imageTag }}" >> $GITHUB_ENV
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1.3.3
+      - name: Build, tag and push Docker image to Amazon ECR
         run: |
-          aws ecr get-login-password | docker login --username AWS --password-stdin ${{ env.REGISTRY }}
-          docker build -t ${{ env.REGISTRY }}/${{ github.event.repository.name }}:${{ env.TAG }} .
-          docker push ${{ env.REGISTRY }}/${{ github.event.repository.name }}:${{ env.TAG }}
-  restart:
+          docker build -t ${{ env.REGISTRY }}/${{ github.event.repository.name }}:${GITHUB_SHA::6} .
+          docker push ${{ env.REGISTRY }}/${{ github.event.repository.name }}:${GITHUB_SHA::6}
+  update_tag:
     needs: ["images"]
+    runs-on: self-hosted
+    steps:
+      - name: Masking token
+        run: |
+          INP_GIT_TOKEN=$(echo ${ODD_GIT_TOKEN} | base64 -d)
+          echo ::add-mask::$INP_GIT_TOKEN
+          echo MASKED_ODD_GIT_TOKEN="$INP_GIT_TOKEN" >> $GITHUB_ENV
+      - uses: actions/checkout@v2
+        with:
+          repository: provectus/environment-state
+          token: ${{ env.MASKED_ODD_GIT_TOKEN }}
+      - run: |
+          sed -i "s/tag:.*/tag:ci-${GITHUB_SHA::6}/" mysql-adapter.yaml
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "update tag"
+          git push
+  restart:
+    needs: ["update_tag"]
     runs-on: self-hosted
     steps:
       - uses: azure/setup-kubectl@v1
