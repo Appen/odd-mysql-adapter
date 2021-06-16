@@ -27,8 +27,8 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1.3.3
       - name: Build, tag and push Docker image to Amazon ECR
         run: |
-          docker build -t ${{ env.REGISTRY }}/${{ github.event.repository.name }}:${GITHUB_SHA::6} .
-          docker push ${{ env.REGISTRY }}/${{ github.event.repository.name }}:${GITHUB_SHA::6}
+          docker build -t ${{ env.REGISTRY }}/${{ github.event.repository.name }}:ci-${GITHUB_SHA::6} .
+          docker push ${{ env.REGISTRY }}/${{ github.event.repository.name }}:ci-${GITHUB_SHA::6}
   update_tag:
     needs: ["images"]
     runs-on: self-hosted
