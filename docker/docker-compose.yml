@@ -1,0 +1,83 @@
+version: "3.8"
+
+services:
+
+  db-mysql:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=${MYSQL_RANDOM_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql:/var/lib/mysql
+      - mysql_config:/etc/mysql
+
+#  db-mariadb:
+#    image: mariadb:latest
+#    command: --default-authentication-plugin=mysql_native_password
+#    restart: always
+#    environment:
+#      - MYSQL_RANDOM_ROOT_PASSWORD=${MYSQL_RANDOM_ROOT_PASSWORD}
+#      - MYSQL_DATABASE=${MYSQL_DATABASE}
+#      - MYSQL_USER=${MYSQL_USER}
+#      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+#    ports:
+#      - "127.0.0.1:3307:3306"
+#    volumes:
+#      - mariadb:/var/lib/mysql
+#      - mariadb_config:/etc/mysql
+
+  adapter-mysql:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      # Cache refreshing interval (minutes):
+      - SCHEDULER_INTERVAL_MINUTES=${SCHEDULER_INTERVAL_MINUTES}
+      # MySQL:
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      # FLASK:
+      - FLASK_ENVIRONMENT=${FLASK_ENVIRONMENT}
+      - FLASK_APP=${FLASK_APP}
+    depends_on:
+      - db-mysql
+    ports:
+      - "127.0.0.1:8080:8080"
+
+#  adapter-mariadb:
+#    build:
+#      context: ..
+#      dockerfile: Dockerfile
+#    restart: always
+#    environment:
+#      # Cache refreshing interval (minutes):
+#      - SCHEDULER_INTERVAL_MINUTES=${SCHEDULER_INTERVAL_MINUTES}
+#      # MariaDB:
+#      - MYSQL_HOST=${MYSQL_HOST}
+#      - MYSQL_PORT=${MYSQL_PORT}
+#      - MYSQL_DATABASE=${MYSQL_DATABASE}
+#      - MYSQL_USER=${MYSQL_USER}
+#      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+#      # FLASK:
+#      - FLASK_ENVIRONMENT=${FLASK_ENVIRONMENT}
+#      - FLASK_APP=${FLASK_APP}
+#    depends_on:
+#      - db-mariadb
+#    ports:
+#      - "127.0.0.1:8081:8080"
+
+volumes:
+  mysql:
+  mysql_config:
+#  mariadb:
+#  mariadb_config:
