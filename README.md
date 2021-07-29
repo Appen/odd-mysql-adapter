@@ -1,6 +1,6 @@
 ## ODD MySQL adapter
 
-ODD MySQL adapter is used for extracting datasets and and data transformers info and metadata from MySQL or MariaDB. This adapter is implemetation of pull model (see more https://github.com/opendatadiscovery/opendatadiscovery-specification/blob/main/specification/specification.md#discovery-models). By default application gather data from MySQL every minute, put it inside local cache and then ready to give it away by /entities API.
+ODD MySQL adapter is used for extracting datasets and data transformers info and metadata from MySQL or MariaDB. This adapter is implemetation of pull model (see more https://github.com/opendatadiscovery/opendatadiscovery-specification/blob/main/specification/specification.md#discovery-models). By default application gather data from MySQL every minute, put it inside local cache and then ready to give it away by /entities API.
 
 This service based on Python Flask and Connexion frameworks with APScheduler.
 
