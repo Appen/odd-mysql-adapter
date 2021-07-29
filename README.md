@@ -1,6 +1,6 @@
 ## ODD MySQL adapter
 
-ODD MySQL adapter is used for extracting datasets and and data transformers info and metadata from MySQL. This adapter is implemetation of pull model (see more https://github.com/opendatadiscovery/opendatadiscovery-specification/blob/main/specification/specification.md#discovery-models). By default application gather data from MySQL every minute, put it inside local cache and then ready to give it away by /entities API.
+ODD MySQL adapter is used for extracting datasets and and data transformers info and metadata from MySQL or MariaDB. This adapter is implemetation of pull model (see more https://github.com/opendatadiscovery/opendatadiscovery-specification/blob/main/specification/specification.md#discovery-models). By default application gather data from MySQL every minute, put it inside local cache and then ready to give it away by /entities API.
 
 This service based on Python Flask and Connexion frameworks with APScheduler.
 
@@ -13,7 +13,7 @@ This service based on Python Flask and Connexion frameworks with APScheduler.
 For more information about data entities see https://github.com/opendatadiscovery/opendatadiscovery-specification/blob/main/specification/specification.md#data-model-specification
 
 ## Quickstart
-Application is ready to run out of the box by the docker-compose (see more https://docs.docker.com/compose/).
+Application is ready to run out of the box by the docker-compose (see more https://docs.docker.com/compose/). If you need to run MariaDB, remove comments from MariaDB services in docker-compose.yaml
 Strongly recommended to override next variables in docker-compose .env file:
 
 ```
