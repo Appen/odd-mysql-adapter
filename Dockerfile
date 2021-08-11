@@ -18,4 +18,4 @@ WORKDIR /srv/app/
 ENTRYPOINT \
 echo 'Waiting 20 seconds for database to be ready...' && \
 sleep 20 && \
-gunicorn --bind 0.0.0.0:8080 --timeout=300 --workers=1 wsgi:application
+gunicorn --bind 0.0.0.0:8080 --timeout=300 --workers=1 ${FLASK_APP}
