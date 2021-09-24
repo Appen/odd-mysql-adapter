@@ -1,0 +1,25 @@
+from datetime import datetime
+from flask import Response
+from typing import List, Tuple, Any, Dict, Optional
+from odd_contract import ODDController
+from odd_contract.models import DataEntityList
+
+from .abstract_adapter import AbstractAdapter
+from .cache import Cache
+
+
+class Controller(ODDController):
+    __empty_cache_response = Response(status=503, headers={'Retry-After': '30'})
+
+    def __init__(self, adapter: AbstractAdapter, data_cache: Cache):
+        self.__adapter = adapter
+        self.__data_cache = data_cache
+
+    def get_data_entities(self, changed_since: Dict[str, Any] = None) -> Optional[Tuple[DataEntityList, datetime]]:
+        changed_since = None
+
+        data_entities = self.__data_cache.retrieve_data_entities(changed_since)
+        return data_entities and DataEntityList(
+            data_source_oddrn=self.__adapter.get_data_source_oddrn(),
+            items=data_entities[0]
+        ), data_entities[1]

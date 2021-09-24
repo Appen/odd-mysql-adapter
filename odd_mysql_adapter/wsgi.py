@@ -1,13 +1,12 @@
 import os
 import logging
-from flask import Response
 from flask_compress import Compress
 from odd_contract import init_flask_app, init_controller
-from adapter.adapter import create_adapter
-from app.cache import Cache
-from app.controller import Controller
-from app.scheduler import Scheduler
-from config import log_env_vars
+from odd_mysql_adapter.adapter.adapter import create_adapter
+from odd_mysql_adapter.app.cache import Cache
+from odd_mysql_adapter.app.controller import Controller
+from odd_mysql_adapter.app.scheduler import Scheduler
+from .config import log_env_vars
 
 logging.basicConfig(
     level=logging.INFO,
@@ -20,8 +19,6 @@ def create_app(conf):
 
     app.config.from_object(conf)
     log_env_vars(app.config)
-
-    app.add_url_rule('/health', 'healthcheck', lambda: Response(status=200))
 
     Compress().init_app(app)
 
@@ -36,6 +33,6 @@ def create_app(conf):
 
 
 if os.environ.get('FLASK_ENVIRONMENT') == "production":
-    application = create_app('config.ProductionConfig')
+    application = create_app('odd_mysql_adapter.config.ProductionConfig')
 else:
-    application = create_app('config.DevelopmentConfig')
+    application = create_app('odd_mysql_adapter.config.DevelopmentConfig')

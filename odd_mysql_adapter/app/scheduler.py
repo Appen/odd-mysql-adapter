@@ -2,8 +2,8 @@ import logging
 from apscheduler.executors.pool import ThreadPoolExecutor
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime
-from app.abstract_adapter import AbstractAdapter
-from app.cache import Cache
+from .abstract_adapter import AbstractAdapter
+from .cache import Cache
 
 
 class Scheduler:

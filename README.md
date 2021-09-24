@@ -58,13 +58,13 @@ Adapter is ready to work out of box, but you probably will need to redefine some
 
 ```Python
 FLASK_ENVIRONMENT = development #For production case change this to "production"
-FLASK_APP = wsgi:application #Path to wsgi module of application (required by gunicorn)
+FLASK_APP = odd_mysql_adapter.wsgi:application #Path to wsgi module of application (required by gunicorn)
 
-MYSQL_HOST = db-mysql #Host of your ClickHouse database.
-MYSQL_PORT = 3306 #Port of your ClickHouse database.
-MYSQL_DATABASE = oddadapter #Name of your ClickHouse database.
-MYSQL_USER = oddadapter #Username of your ClickHouse database.
-MYSQL_PASSWORD = odd-adapter-password #Password of your ClickHouse database.
+MYSQL_HOST = db-mysql #Host of your MySql database.
+MYSQL_PORT = 3306 #Port of your MySql database.
+MYSQL_DATABASE = oddadapter #Name of your MySql database.
+MYSQL_USER = oddadapter #Username of your MySql database.
+MYSQL_PASSWORD = odd-adapter-password #Password of your MySql database.
 
 CLOUD_TYPE = aws #Name of your cloud service. Used to form ODDRN.
 CLOUD_REGION = region_1 #Region of your cloud service. Used to form ODDRN.
