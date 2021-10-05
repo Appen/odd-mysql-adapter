@@ -1,7 +1,8 @@
 import logging
 from datetime import datetime
 from itertools import chain
-from typing import List, Union, Iterable, Tuple, Optional
+from typing import List, Iterable, Tuple, Optional
+
 from odd_contract.models import DataEntity
 
 CacheEntry = Tuple[List[DataEntity], datetime]
@@ -19,7 +20,6 @@ class Cache:
 
     def retrieve_data_entities(self, changed_since: datetime = None) -> Optional[CacheEntry]:
         if self.__DATA_ENTITIES is None:
-            logging.warning('DataEntities cache has never been enriched')
             return None
 
         data_entities_filtered = self.__DATA_ENTITIES[0]

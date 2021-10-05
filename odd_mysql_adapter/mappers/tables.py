@@ -1,12 +1,13 @@
-from odd_contract.models import DataEntity, DataSet, DataTransformer, Type, DataEntityType
-from . import MetadataNamedtuple, ColumnMetadataNamedtuple, \
-    _data_set_metadata_schema_url, _data_set_metadata_excluded_keys
-from .column import map_column
-from .metadata import append_metadata_extension
-from .type import TABLE_TYPES_SQL_TO_ODD
-from odd_mysql_adapter.app.oddrn import generate_table_oddrn, generate_schema_oddrn
-
 import pytz
+from odd_contract.models import DataEntity, DataSet, DataTransformer, DataEntityType
+
+from . import (
+    MetadataNamedtuple, ColumnMetadataNamedtuple, _data_set_metadata_schema_url, _data_set_metadata_excluded_keys
+)
+from .columns import map_column
+from .metadata import append_metadata_extension
+from .oddrn import generate_table_oddrn, generate_schema_oddrn
+from .types import TABLE_TYPES_SQL_TO_ODD
 
 
 def map_tables(data_source_oddrn: str, tables: list[tuple], columns: list[tuple]) -> list[DataEntity]:

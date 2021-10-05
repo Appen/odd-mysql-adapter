@@ -1,17 +1,17 @@
+import logging
 from datetime import datetime
-from flask import Response
-from typing import List, Tuple, Any, Dict, Optional
+from typing import Tuple, Any, Dict, Optional
+
 from odd_contract import ODDController
 from odd_contract.models import DataEntityList
 
-from .abstract_adapter import AbstractAdapter
+from .adapter import MysqlAdapter
 from .cache import Cache
 
 
 class Controller(ODDController):
-    __empty_cache_response = Response(status=503, headers={'Retry-After': '30'})
 
-    def __init__(self, adapter: AbstractAdapter, data_cache: Cache):
+    def __init__(self, adapter: MysqlAdapter, data_cache: Cache):
         self.__adapter = adapter
         self.__data_cache = data_cache
 
@@ -19,7 +19,12 @@ class Controller(ODDController):
         changed_since = None
 
         data_entities = self.__data_cache.retrieve_data_entities(changed_since)
-        return data_entities and DataEntityList(
+
+        if data_entities is None:
+            logging.warning('DataEntities cache has never been enriched')
+            return None
+
+        return DataEntityList(
             data_source_oddrn=self.__adapter.get_data_source_oddrn(),
             items=data_entities[0]
         ), data_entities[1]

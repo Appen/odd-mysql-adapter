@@ -1,12 +1,14 @@
-import os
 import logging
+import os
+
 from flask_compress import Compress
 from odd_contract import init_flask_app, init_controller
-from odd_mysql_adapter.adapter.adapter import create_adapter
-from odd_mysql_adapter.app.cache import Cache
-from odd_mysql_adapter.app.controller import Controller
-from odd_mysql_adapter.app.scheduler import Scheduler
+
+from .adapter import MysqlAdapter
+from .cache import Cache
 from .config import log_env_vars
+from .controllers import Controller
+from .scheduler import Scheduler
 
 logging.basicConfig(
     level=logging.INFO,
@@ -23,7 +25,7 @@ def create_app(conf):
     Compress().init_app(app)
 
     cache = Cache()
-    adapter = create_adapter(app.config['ODD_DATA_SOURCE_NAME'], app.config['ODD_DATA_SOURCE'], app.config)
+    adapter = MysqlAdapter(app.config['ODD_DATA_SOURCE_NAME'], app.config['ODD_DATA_SOURCE'], app.config)
     init_controller(Controller(adapter, cache))
 
     cache_refresh_interval: int = int(app.config['SCHEDULER_INTERVAL_MINUTES'])

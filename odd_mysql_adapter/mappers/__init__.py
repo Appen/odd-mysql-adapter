@@ -1,8 +1,5 @@
 from collections import namedtuple
 
-_ADAPTER_PREFIX: str = 'mysql/'
-_DEFAULT_CLOUD_PREFIX: str = ''
-
 _METADATA_SCHEMA_URL_PREFIX: str = \
     'https://raw.githubusercontent.com/opendatadiscovery/opendatadiscovery-specification/main/specification/' \
     'extensions/mysql.json#/definitions/Mysql'
