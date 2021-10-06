@@ -19,7 +19,7 @@ class Scheduler:
         self.__scheduler.add_job(self.__retrieve_data_entities,
                                  trigger='interval',
                                  minutes=interval_minutes,
-                                 next_run_time=datetime.now())  # todo: utcnow
+                                 next_run_time=datetime.now())
 
     def __retrieve_data_entities(self):
         datasets = self.__adapter.get_datasets()

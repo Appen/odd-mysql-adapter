@@ -1,32 +1,26 @@
 import pytz
 from odd_contract.models import DataEntity, DataSet, DataTransformer, DataEntityType
+from oddrn import MysqlGenerator
 
 from . import (
     MetadataNamedtuple, ColumnMetadataNamedtuple, _data_set_metadata_schema_url, _data_set_metadata_excluded_keys
 )
 from .columns import map_column
 from .metadata import append_metadata_extension
-from .oddrn import generate_table_oddrn, generate_schema_oddrn
 from .types import TABLE_TYPES_SQL_TO_ODD
 
 
-def map_tables(data_source_oddrn: str, tables: list[tuple], columns: list[tuple]) -> list[DataEntity]:
+def map_tables(oddrn_generator: MysqlGenerator, tables: list[tuple], columns: list[tuple]) -> list[DataEntity]:
     data_entities: list[DataEntity] = []
     column_index: int = 0
 
     for table in tables:
         metadata: MetadataNamedtuple = MetadataNamedtuple(*table)
-
-        table_catalog: str = metadata.table_catalog
-        table_schema: str = metadata.table_schema
         table_name: str = metadata.table_name
-
-        schema_oddrn: str = generate_schema_oddrn(data_source_oddrn, table_catalog, table_schema)
-        table_oddrn: str = generate_table_oddrn(data_source_oddrn, table_catalog, table_schema, table_name)
 
         # DataEntity
         data_entity: DataEntity = DataEntity(
-            oddrn=table_oddrn,
+            oddrn=oddrn_generator.get_oddrn_by_path("tables", table_name),
             name=table_name,
             type=TABLE_TYPES_SQL_TO_ODD.get(metadata.table_type, DataEntityType.UNKNOWN),
             owner=metadata.table_schema,
@@ -47,7 +41,7 @@ def map_tables(data_source_oddrn: str, tables: list[tuple], columns: list[tuple]
 
         # Dataset
         data_entity.dataset = DataSet(
-            parent_oddrn=schema_oddrn,
+            parent_oddrn=oddrn_generator.get_oddrn_by_path("databases"),
             rows_number=metadata.table_rows,
             field_list=[]
         )
@@ -61,10 +55,8 @@ def map_tables(data_source_oddrn: str, tables: list[tuple], columns: list[tuple]
             column: tuple = columns[column_index]
             column_metadata: ColumnMetadataNamedtuple = ColumnMetadataNamedtuple(*column)
 
-            if column_metadata.table_catalog == table_catalog and \
-                    column_metadata.table_schema == table_schema and \
-                    column_metadata.table_name == table_name:
-                data_entity.dataset.field_list.append(map_column(column_metadata, data_entity.owner, table_oddrn))
+            if column_metadata.table_name == table_name:
+                data_entity.dataset.field_list.append(map_column(column_metadata, oddrn_generator, data_entity.owner))
                 column_index += 1
             else:
                 break

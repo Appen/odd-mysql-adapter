@@ -3,32 +3,27 @@ import logging
 import mysql.connector
 from mysql.connector import errorcode
 from odd_contract.models import DataEntity
+from oddrn import MysqlGenerator
 
 from .mappers import _column_metadata, _column_table, _column_order_by, _table_select
 from .mappers.tables import map_tables
 
-_ADAPTER_PREFIX: str = 'mysql/'
-_DEFAULT_CLOUD_PREFIX: str = ''
-
 
 class MysqlAdapter:
-    __cloud_prefix: str = _DEFAULT_CLOUD_PREFIX
     __connection = None
     __cursor = None
 
-    def __init__(self, data_source_name: str, data_source: str, config: dict) -> None:
-        self._data_source_name = data_source_name
-        self._data_source = data_source
+    def __init__(self, config: dict) -> None:
         self.__host = config['ODD_HOST']
         self.__port = config['ODD_PORT']
         self.__database = config['ODD_DATABASE']
         self.__user = config['ODD_USER']
         self.__password = config['ODD_PASSWORD']
         self.__ssl_disabled = config['ODD_SSL_DISABLED']
-        self.__data_source_oddrn = f'//{self.__cloud_prefix}{_ADAPTER_PREFIX}{self._data_source_name}'
+        self.__oddrn_generator = MysqlGenerator(host_settings=f"{self.__host}:{self.__port}", databases=self.__database)
 
     def get_data_source_oddrn(self) -> str:
-        return self.__data_source_oddrn
+        return self.__oddrn_generator.get_data_source_oddrn()
 
     def get_datasets(self) -> list[DataEntity]:
         try:
@@ -38,8 +33,7 @@ class MysqlAdapter:
             columns = self.__query(_column_metadata, _column_table, _column_order_by)
             self.__disconnect()
             logging.info(f'Load {len(tables)} Datasets DataEntities from database')
-
-            return map_tables(self.get_data_source_oddrn(), tables, columns)
+            return map_tables(self.__oddrn_generator, tables, columns)
         except Exception:
             logging.error('Failed to load metadata for tables')
             logging.exception(Exception)
