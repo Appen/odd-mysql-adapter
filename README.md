@@ -20,10 +20,6 @@ Strongly recommended to override next variables in docker-compose .env file:
 MYSQL_DATABASE=oddadapter
 MYSQL_USER=oddadapter
 MYSQL_PASSWORD=odd-adapter-password
-
-CLOUD_TYPE=aws
-CLOUD_REGION=region_1
-CLOUD_ACCOUNT=account_1
 ```
 
 After docker-compose run successful, application is ready to accept connection on port :8080. 
@@ -65,10 +61,6 @@ MYSQL_PORT = 3306 #Port of your MySql database.
 MYSQL_DATABASE = oddadapter #Name of your MySql database.
 MYSQL_USER = oddadapter #Username of your MySql database.
 MYSQL_PASSWORD = odd-adapter-password #Password of your MySql database.
-
-CLOUD_TYPE = aws #Name of your cloud service. Used to form ODDRN.
-CLOUD_REGION = region_1 #Region of your cloud service. Used to form ODDRN.
-CLOUD_ACCOUNT = account_1 #Account of your cloud service. Used to form ODDRN.
 ```
 
 ## Requirements

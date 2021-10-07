@@ -4,8 +4,7 @@ from typing import Any
 
 
 class MissingEnvironmentVariable(Exception):
-    def __init__(self, message: str) -> None:
-        super().__init__(message)
+    pass
 
 
 def get_env(env: str, default_value: Any = None) -> str:
