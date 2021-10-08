@@ -1,6 +1,6 @@
 import pytz
 from odd_contract.models import DataEntity, DataSet, DataTransformer, DataEntityType
-from oddrn import MysqlGenerator
+from oddrn_generator import MysqlGenerator
 
 from . import (
     MetadataNamedtuple, ColumnMetadataNamedtuple, _data_set_metadata_schema_url, _data_set_metadata_excluded_keys

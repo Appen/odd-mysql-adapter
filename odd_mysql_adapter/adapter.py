@@ -3,7 +3,7 @@ import logging
 import mysql.connector
 from mysql.connector import errorcode
 from odd_contract.models import DataEntity
-from oddrn import MysqlGenerator
+from oddrn_generator import MysqlGenerator
 
 from .mappers import _column_metadata, _column_table, _column_order_by, _table_select
 from .mappers.tables import map_tables

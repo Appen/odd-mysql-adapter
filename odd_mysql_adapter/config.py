@@ -32,7 +32,7 @@ class DevelopmentConfig(BaseConfig):
 
 
 class ProductionConfig(BaseConfig):
-    FLASK_DEBUG = True
+    FLASK_DEBUG = False
 
 
 def log_env_vars(config: dict):

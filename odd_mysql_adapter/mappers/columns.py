@@ -1,5 +1,5 @@
 from odd_contract.models import DataSetField, DataSetFieldType, Type
-from oddrn import MysqlGenerator
+from oddrn_generator import MysqlGenerator
 
 from . import (
     ColumnMetadataNamedtuple, _data_set_field_metadata_schema_url, _data_set_field_metadata_excluded_keys
