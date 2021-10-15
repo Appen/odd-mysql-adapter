@@ -18,19 +18,17 @@ logging.basicConfig(
 
 def create_app(conf):
     app = init_flask_app()
-
     app.config.from_object(conf)
     log_env_vars(app.config)
 
     Compress().init_app(app)
 
     cache = Cache()
-    adapter = MysqlAdapter(app.config['ODD_DATA_SOURCE_NAME'], app.config['ODD_DATA_SOURCE'], app.config)
+    adapter = MysqlAdapter(app.config)
     init_controller(Controller(adapter, cache))
 
-    cache_refresh_interval: int = int(app.config['SCHEDULER_INTERVAL_MINUTES'])
     with app.app_context():
-        Scheduler(adapter, cache).start_scheduler(cache_refresh_interval)
+        Scheduler(adapter, cache).start_scheduler(int(app.config['SCHEDULER_INTERVAL_MINUTES']))
         return app
 
 
