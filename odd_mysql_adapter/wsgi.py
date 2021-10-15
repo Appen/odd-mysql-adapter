@@ -1,13 +1,14 @@
-import os
 import logging
-from flask import Response
+import os
+
 from flask_compress import Compress
 from odd_contract import init_flask_app, init_controller
-from adapter.adapter import create_adapter
-from app.cache import Cache
-from app.controller import Controller
-from app.scheduler import Scheduler
-from config import log_env_vars
+
+from .adapter import MysqlAdapter
+from .cache import Cache
+from .config import log_env_vars
+from .controllers import Controller
+from .scheduler import Scheduler
 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,12 +22,10 @@ def create_app(conf):
     app.config.from_object(conf)
     log_env_vars(app.config)
 
-    app.add_url_rule('/health', 'healthcheck', lambda: Response(status=200))
-
     Compress().init_app(app)
 
     cache = Cache()
-    adapter = create_adapter(app.config['ODD_DATA_SOURCE_NAME'], app.config['ODD_DATA_SOURCE'], app.config)
+    adapter = MysqlAdapter(app.config['ODD_DATA_SOURCE_NAME'], app.config['ODD_DATA_SOURCE'], app.config)
     init_controller(Controller(adapter, cache))
 
     cache_refresh_interval: int = int(app.config['SCHEDULER_INTERVAL_MINUTES'])
@@ -36,6 +35,6 @@ def create_app(conf):
 
 
 if os.environ.get('FLASK_ENVIRONMENT') == "production":
-    application = create_app('config.ProductionConfig')
+    application = create_app('odd_mysql_adapter.config.ProductionConfig')
 else:
-    application = create_app('config.DevelopmentConfig')
+    application = create_app('odd_mysql_adapter.config.DevelopmentConfig')

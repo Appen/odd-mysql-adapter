@@ -1,25 +1,24 @@
 import logging
+
 import mysql.connector
 from mysql.connector import errorcode
 from odd_contract.models import DataEntity
-from adapter import _ADAPTER_PREFIX, _DEFAULT_CLOUD_PREFIX, _table_select
-from adapter import _column_metadata, _column_table, _column_order_by
-from adapter.table import _map_table
-from app.abstract_adapter import AbstractAdapter
+
+from .mappers import _column_metadata, _column_table, _column_order_by, _table_select
+from .mappers.tables import map_tables
+
+_ADAPTER_PREFIX: str = 'mysql/'
+_DEFAULT_CLOUD_PREFIX: str = ''
 
 
-def create_adapter(data_source_name: str, data_source: str, config: dict) -> AbstractAdapter:
-    return MysqlAdapter(data_source_name, data_source, config)
-
-
-class MysqlAdapter(AbstractAdapter):
+class MysqlAdapter:
     __cloud_prefix: str = _DEFAULT_CLOUD_PREFIX
     __connection = None
     __cursor = None
 
-    # replace
     def __init__(self, data_source_name: str, data_source: str, config: dict) -> None:
-        super().__init__(data_source_name, data_source, config)
+        self._data_source_name = data_source_name
+        self._data_source = data_source
         self.__host = config['ODD_HOST']
         self.__port = config['ODD_PORT']
         self.__database = config['ODD_DATABASE']
@@ -37,11 +36,10 @@ class MysqlAdapter(AbstractAdapter):
 
             tables = self.__execute(_table_select)
             columns = self.__query(_column_metadata, _column_table, _column_order_by)
-
             self.__disconnect()
             logging.info(f'Load {len(tables)} Datasets DataEntities from database')
 
-            return _map_table(self.get_data_source_oddrn(), tables, columns)
+            return map_tables(self.get_data_source_oddrn(), tables, columns)
         except Exception:
             logging.error('Failed to load metadata for tables')
             logging.exception(Exception)

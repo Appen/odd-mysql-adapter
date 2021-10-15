@@ -1,13 +1,15 @@
 import logging
+from datetime import datetime
+
 from apscheduler.executors.pool import ThreadPoolExecutor
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime
-from app.abstract_adapter import AbstractAdapter
-from app.cache import Cache
+
+from .adapter import MysqlAdapter
+from .cache import Cache
 
 
 class Scheduler:
-    def __init__(self, adapter: AbstractAdapter, cache: Cache) -> None:
+    def __init__(self, adapter: MysqlAdapter, cache: Cache) -> None:
         self.__adapter = adapter
         self.__cache = cache
         self.__scheduler = BackgroundScheduler(executors={'default': ThreadPoolExecutor(1)})
@@ -17,7 +19,7 @@ class Scheduler:
         self.__scheduler.add_job(self.__retrieve_data_entities,
                                  trigger='interval',
                                  minutes=interval_minutes,
-                                 next_run_time=datetime.now())
+                                 next_run_time=datetime.now())  # todo: utcnow
 
     def __retrieve_data_entities(self):
         datasets = self.__adapter.get_datasets()

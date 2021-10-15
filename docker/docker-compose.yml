@@ -32,7 +32,7 @@ services:
 #      - mariadb:/var/lib/mysql
 #      - mariadb_config:/etc/mysql
 
-  adapter-mysql:
+  odd-adapter-mysql:
     build:
       context: ..
       dockerfile: Dockerfile
