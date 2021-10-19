@@ -306,7 +306,7 @@ reference = "test"
 
 [[package]]
 name = "oddrn-generator"
-version = "0.1.0"
+version = "0.1.11"
 description = "Open Data Discovery Resource Name Generator"
 category = "main"
 optional = false
@@ -485,7 +485,7 @@ reference = "test"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "9845090301982a8b2478fccc8b90eaa1e2fe6220ff14b80421cecc80eacfd705"
+content-hash = "d5996e8d6db80f03444029b7e34651f9e34eff64896f0c589a72377f8b1a2865"
 
 [metadata.files]
 apscheduler = [
@@ -685,8 +685,8 @@ odd-contract-dev = [
     {file = "odd_contract_dev-1.0.3.tar.gz", hash = "sha256:6e3542118c786ab8ec50b686d24aa6cda0f19c3584d157db823e23f7452252ca"},
 ]
 oddrn-generator = [
-    {file = "oddrn-generator-0.1.0.tar.gz", hash = "sha256:804d4ef61a0ba138627b5f3ecbe895593fe7a3969034500ee399aa3d19114c26"},
-    {file = "oddrn_generator-0.1.0-py3-none-any.whl", hash = "sha256:7cc61ea386e7b666655f7853dd7e0f19acc1cd863c5671e178000c67bf778221"},
+    {file = "oddrn-generator-0.1.11.tar.gz", hash = "sha256:ecda24d134c6a86b636ad39e0fb4334c6d463167f9ed3a93fac92a9e9c1d26d3"},
+    {file = "oddrn_generator-0.1.11-py3-none-any.whl", hash = "sha256:d25f2570227c7cffc52aac8101857a51dcfece34f4968d0ba22b2aeaec1d7f44"},
 ]
 openapi-schema-validator = [
     {file = "openapi-schema-validator-0.1.5.tar.gz", hash = "sha256:a4b2712020284cee880b4c55faa513fbc2f8f07f365deda6098f8ab943c9f0df"},

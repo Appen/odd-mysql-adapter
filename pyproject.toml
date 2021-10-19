@@ -21,7 +21,7 @@ odd-contract-dev = "^1.0.3"
 Flask-Compress = "^1.10.1"
 APScheduler = "^3.7.0"
 mysql-connector-python = "^8.0.26"
-oddrn-generator = "^0.1.0"
+oddrn-generator = "^0.1.10"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
