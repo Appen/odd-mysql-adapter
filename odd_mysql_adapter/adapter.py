@@ -20,7 +20,7 @@ class MysqlAdapter:
         self.__user = config['ODD_USER']
         self.__password = config['ODD_PASSWORD']
         self.__ssl_disabled = config['ODD_SSL_DISABLED']
-        self.__oddrn_generator = MysqlGenerator(host_settings=f"{self.__host}:{self.__port}", databases=self.__database)
+        self.__oddrn_generator = MysqlGenerator(host_settings=f"{self.__host}", databases=self.__database)
 
     def get_data_source_oddrn(self) -> str:
         return self.__oddrn_generator.get_data_source_oddrn()
