@@ -1,14 +1,8 @@
 name: build
-on: 
-#   workflow_dispatch:
-#     inputs:
-#       imageTag:
-#         description: Tag for the image
-#         required: false
-#         default: latest
+on:
   push:
     branches:
-      - "master"
+      - "main"
 
 jobs:
   images:
@@ -20,9 +14,6 @@ jobs:
         with:
           fetch-depth: 1
       - uses: unfor19/install-aws-cli-action@v1
-      # - name: Check image tag
-      #   if: github.event.inputs.imageTag != ''
-      #   run: echo "TAG=${{ github.event.inputs.imageTag }}" >> $GITHUB_ENV
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1.3.3
       - name: Build, tag and push Docker image to Amazon ECR
