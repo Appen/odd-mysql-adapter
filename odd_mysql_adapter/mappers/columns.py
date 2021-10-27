@@ -1,4 +1,4 @@
-from odd_contract.models import DataSetField, DataSetFieldType, Type
+from odd_models.models import DataSetField, DataSetFieldType, Type
 from oddrn_generator import MysqlGenerator
 
 from . import (

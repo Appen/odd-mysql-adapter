@@ -1,6 +1,6 @@
 from typing import NamedTuple, Optional
 
-from odd_contract.models import MetadataExtension
+from odd_models.models import MetadataExtension
 
 
 def append_metadata_extension(metadata_list: list[MetadataExtension],

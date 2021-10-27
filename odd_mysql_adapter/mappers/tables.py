@@ -1,5 +1,5 @@
 import pytz
-from odd_contract.models import DataEntity, DataSet, DataTransformer, DataEntityType
+from odd_models.models import DataEntity, DataSet, DataTransformer, DataEntityType
 from oddrn_generator import MysqlGenerator
 
 from . import (

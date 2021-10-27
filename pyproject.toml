@@ -4,24 +4,14 @@ version = "0.1.0"
 description = ""
 authors = ["Ramazan Yapparov <ryapparov@provectus.com>"]
 
-[[tool.poetry.source]]
-name = "main"
-url = "https://test.pypi.org/simple/"
-secondary = true
-
-[[tool.poetry.source]]
-name = "test"
-url = "https://test.pypi.org/simple/"
-
 [tool.poetry.dependencies]
 python = "^3.8"
 flask = "^2.0.1"
 gunicorn = "^20.1.0"
-odd-contract-dev = "^1.0.3"
-Flask-Compress = "^1.10.1"
 APScheduler = "^3.7.0"
 mysql-connector-python = "^8.0.26"
 oddrn-generator = "^0.1.10"
+odd-models = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

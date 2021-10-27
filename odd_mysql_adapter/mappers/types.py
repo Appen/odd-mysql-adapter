@@ -5,7 +5,7 @@
 # tinyblob, tinytext, mediumblob, mediumtext, longblob, longtext
 # 2) tinyint, smallint, mediumint, int, integer, bigint
 # float, double, double precision, real, decimal, numeric, bit
-from odd_contract.models import Type, DataEntityType
+from odd_models.models import Type, DataEntityType
 
 TYPES_SQL_TO_ODD: dict[str, Type] = {
 

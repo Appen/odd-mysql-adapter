@@ -1,8 +1,7 @@
 import logging
 import os
 
-from flask_compress import Compress
-from odd_contract import init_flask_app, init_controller
+from odd_models import init_flask_app, init_controller
 
 from .adapter import MysqlAdapter
 from .cache import Cache
@@ -20,8 +19,6 @@ def create_app(conf):
     app = init_flask_app()
     app.config.from_object(conf)
     log_env_vars(app.config)
-
-    Compress().init_app(app)
 
     cache = Cache()
     adapter = MysqlAdapter(app.config)
