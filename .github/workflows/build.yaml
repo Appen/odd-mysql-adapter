@@ -6,7 +6,7 @@ on:
 
 jobs:
   images:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       REGISTRY: 436866023604.dkr.ecr.eu-central-1.amazonaws.com
     steps:
@@ -22,7 +22,7 @@ jobs:
           docker push ${{ env.REGISTRY }}/${{ github.event.repository.name }}:ci-${GITHUB_SHA::6}
   update_tag:
     needs: ["images"]
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Masking token
         run: |
@@ -40,10 +40,15 @@ jobs:
           git add .
           git commit -m "update tag"
           git push
-  restart:
+  argocd_sync:
     needs: ["update_tag"]
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
-      - uses: azure/setup-kubectl@v1
-      - run: |
-          kubectl -n demo rollout restart deployment ${{ github.event.repository.name }} ||:
+      - name: Install ArgoCD CLI
+        run: |
+          curl -sSL -o ./argocd https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+          chmod +x ./argocd
+      - name: Login into ArgoCD
+        run: ./argocd login ${{ secrets.ARGOCD_SERVER }} --username ${{ secrets.ARGOCD_LOGIN }} --password '${{ secrets.ARGOCD_PASSWORD }}' --grpc-web
+      - name: Sync ODD Platform application
+        run: ./argocd app sync odd-mysql-platform
