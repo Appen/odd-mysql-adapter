@@ -254,15 +254,15 @@ gssapi = ["gssapi (>=1.6.9)"]
 
 [[package]]
 name = "odd-models"
-version = "1.0.0"
+version = "1.0.4"
 description = "Open Data Discovery Models"
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.6,<4.0"
 
 [package.dependencies]
 connexion = "2.7.0"
-flask-compress = "1.10.1"
+Flask-Compress = "1.10.1"
 pydantic = "1.8.2"
 
 [[package]]
@@ -431,7 +431,7 @@ watchdog = ["watchdog"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "b5c6ecbf6852691eaf22d4052cd7f826a6c6b36de804be7a8527384d5e5c812e"
+content-hash = "5d75d3e1acee89d55fc1fdb286d2a408730dee0af9eddbd5f5c998cb7e4c09c5"
 
 [metadata.files]
 apscheduler = [
@@ -642,8 +642,8 @@ mysql-connector-python = [
     {file = "mysql_connector_python-8.0.26-py2.py3-none-any.whl", hash = "sha256:eaaa4a41e8508bc0eee5c39f5bb4454cc6d091a332535e988d09746ab4428f3e"},
 ]
 odd-models = [
-    {file = "odd-models-1.0.0.tar.gz", hash = "sha256:c198e1c2bd2024d4913b0eafb16a71661dfca8544298be078bb708f9b3db9c52"},
-    {file = "odd_models-1.0.0-py3-none-any.whl", hash = "sha256:05dff8a7ec1feed1d6ab7bcd9e2b4d1f9fcab857c2b87dea2638e5d70f05ff54"},
+    {file = "odd-models-1.0.4.tar.gz", hash = "sha256:7b0d432e13a08cd68781b402c45266f0119d0cd128ac9ec926339ce5e853c1de"},
+    {file = "odd_models-1.0.4-py3-none-any.whl", hash = "sha256:c294374246b661dc1208f5850201777f674d3e08fc72e23921a6cefd5f9c9741"},
 ]
 oddrn-generator = [
     {file = "oddrn-generator-0.1.11.tar.gz", hash = "sha256:ecda24d134c6a86b636ad39e0fb4334c6d463167f9ed3a93fac92a9e9c1d26d3"},

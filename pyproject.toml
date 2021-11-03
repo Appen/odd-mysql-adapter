@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "odd-mysql-adapter"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Ramazan Yapparov <ryapparov@provectus.com>"]
 
@@ -11,7 +11,7 @@ gunicorn = "^20.1.0"
 APScheduler = "^3.7.0"
 mysql-connector-python = "^8.0.26"
 oddrn-generator = "^0.1.10"
-odd-models = "^1.0.0"
+odd-models = "^1.0.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

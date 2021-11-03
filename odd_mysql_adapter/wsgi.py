@@ -1,7 +1,7 @@
 import logging
 import os
 
-from odd_models import init_flask_app, init_controller
+from odd_models.adapter import init_flask_app, init_controller
 
 from .adapter import MysqlAdapter
 from .cache import Cache
