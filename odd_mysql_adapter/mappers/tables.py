@@ -8,6 +8,7 @@ from . import (
 from .columns import map_column
 from .metadata import append_metadata_extension
 from .types import TABLE_TYPES_SQL_TO_ODD
+from .views import extract_transformer_data
 
 
 def map_tables(oddrn_generator: MysqlGenerator, tables: list[tuple], columns: list[tuple]) -> list[DataEntity]:
@@ -18,11 +19,14 @@ def map_tables(oddrn_generator: MysqlGenerator, tables: list[tuple], columns: li
         metadata: MetadataNamedtuple = MetadataNamedtuple(*table)
         table_name: str = metadata.table_name
 
+        data_entity_type = TABLE_TYPES_SQL_TO_ODD.get(metadata.table_type, DataEntityType.UNKNOWN)
+        oddrn_path = "views" if data_entity_type == DataEntityType.VIEW else "tables"
+
         # DataEntity
         data_entity: DataEntity = DataEntity(
-            oddrn=oddrn_generator.get_oddrn_by_path("tables", table_name),
+            oddrn=oddrn_generator.get_oddrn_by_path(oddrn_path, table_name),
             name=table_name,
-            type=TABLE_TYPES_SQL_TO_ODD.get(metadata.table_type, DataEntityType.UNKNOWN),
+            type=data_entity_type,
             owner=metadata.table_schema,
             description=metadata.table_comment,
             metadata=[],
@@ -41,14 +45,13 @@ def map_tables(oddrn_generator: MysqlGenerator, tables: list[tuple], columns: li
 
         # Dataset
         data_entity.dataset = DataSet(
-            parent_oddrn=oddrn_generator.get_oddrn_by_path("databases"),
             rows_number=metadata.table_rows,
             field_list=[]
         )
 
         # DataTransformer
-        if metadata.table_type == 'VIEW':
-            data_entity.data_transformer = DataTransformer(sql=metadata.view_definition, inputs=[], outputs=[])
+        if data_entity_type == DataEntityType.VIEW:
+            data_entity.data_transformer = extract_transformer_data(metadata.view_definition, oddrn_generator)
 
         # DatasetField
         while column_index < len(columns):
@@ -56,7 +59,7 @@ def map_tables(oddrn_generator: MysqlGenerator, tables: list[tuple], columns: li
             column_metadata: ColumnMetadataNamedtuple = ColumnMetadataNamedtuple(*column)
 
             if column_metadata.table_name == table_name:
-                data_entity.dataset.field_list.append(map_column(column_metadata, oddrn_generator, data_entity.owner))
+                data_entity.dataset.field_list.append(map_column(column_metadata, oddrn_generator, data_entity.owner, oddrn_path))
                 column_index += 1
             else:
                 break
