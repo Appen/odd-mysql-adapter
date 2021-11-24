@@ -1,4 +1,4 @@
-name: ODD Postgresql adapter release
+name: ODD MySQL adapter release
 
 on:
   release:
