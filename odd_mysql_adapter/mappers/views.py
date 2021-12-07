@@ -5,10 +5,18 @@ from odd_models.models import DataTransformer
 from odd_models.utils import SqlParser
 from oddrn_generator import MysqlGenerator
 
+import logging
+
 
 def extract_transformer_data(sql: str, oddrn_generator: MysqlGenerator) -> DataTransformer:
     sql_parser = SqlParser(sql.replace("(", '').replace(")", ""))
-    inputs, outputs = sql_parser.get_response()
+
+    try:
+        inputs, outputs = sql_parser.get_response()
+    except Exception as e:
+        logging.error(f"Couldn't parse inputs and outputs from {sql}")
+        return DataTransformer(sql=sql)
+
     return DataTransformer(
         inputs=get_oddrn_list(inputs, oddrn_generator),
         outputs=get_oddrn_list(outputs, oddrn_generator),
