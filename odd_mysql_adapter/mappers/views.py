@@ -15,7 +15,7 @@ def extract_transformer_data(sql: str, oddrn_generator: MysqlGenerator) -> DataT
         inputs, outputs = sql_parser.get_response()
     except Exception as e:
         logging.error(f"Couldn't parse inputs and outputs from {sql}")
-        return DataTransformer(sql=sql)
+        return DataTransformer(sql=sql, inputs=[], outputs=[])
 
     return DataTransformer(
         inputs=get_oddrn_list(inputs, oddrn_generator),
